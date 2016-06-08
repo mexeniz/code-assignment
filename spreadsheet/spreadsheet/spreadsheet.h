@@ -10,12 +10,17 @@
 #define spreadsheet_h
 
 #include <stdio.h>
-struct spreadsheet{
-    struct 
+struct Spreadsheet{
+    struct Cell* root;
+    char* name;
+    int row;
+    int col;
+    int n_cell;
 };
-struct cell{
+struct Cell{
     char* val;
-    int size;
+    int x;
+    int y;
 };
 
 #endif /* spreadsheet_h */
