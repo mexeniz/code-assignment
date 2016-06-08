@@ -42,12 +42,20 @@ void print_matrix(struct Matrix* mat){
     
 }
 void transpose(struct Matrix* mat){
+    struct Matrix trans = matrix( &mat->col,&mat->row);
+
     int i,j;
-    for (i=0 ; i < mat->row ; i++){
-        for (j = i+1; j < mat->col; j++){
-            swap(mat, i, j, j, i);
+    for (i=0 ; i < mat->col ; i++){
+        for (j = 0; j < mat->row; j++){
+            int tmp = *get_val(mat, j, i);
+            set_val(&trans, &tmp, i, j);
         }
     }
+    free(mat->ptr);
+    mat->ptr = trans.ptr;
+    mat->col = trans.col;
+    mat->row = trans.row;
+    
 }
 void swap(struct Matrix* mat, int i, int j, int i2, int j2){
     int tmp = *get_val(mat, i, j);
