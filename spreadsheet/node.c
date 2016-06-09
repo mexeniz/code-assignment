@@ -33,10 +33,16 @@ int is_formula(struct Node* node){
     return 0;
 }
 int balance_val(struct Node* node){
-    return (node->right)->height - (node->left)->height ;
+    int h1 =0 , h2 = 0;
+    if(node->right != NULL) h1 = (node->right)->height;
+    if(node->left != NULL) h2= (node->left)->height;
+    return h1-h2;
 }
 int set_height(struct Node* node){
-    int max_height = (node->right)->height > (node->left)->height ? (node->right)->height : (node->left)->height ;
+    int h1 =0 , h2 = 0;
+    if(node->right != NULL) h1 = (node->right)->height;
+    if(node->left != NULL) h2= (node->left)->height;
+    int max_height = h1 > h2 ? h1 : h2 ;
     node->height = 1 + max_height;
     return node->height ;
 }

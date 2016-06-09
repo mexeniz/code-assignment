@@ -30,11 +30,11 @@ void inorder(struct AVLTree* tree, struct Node* node){
 }
 void update_formula_node(struct AVLTree* tree, struct Node* node){
     if (node == NULL) return;
-    inorder(tree, node->left);
+    update_formula_node(tree, node->left);
     if(is_formula(node)){
         calculate(tree,node);
     }
-    inorder(tree, node->right);
+    update_formula_node(tree, node->right);
 }
 struct Node* get_node(struct AVLTree* tree,char* x, char* y){
     // Map Position A1 -> x=0 y=0
@@ -114,6 +114,7 @@ struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, c
     if(is_formula(node)){
         calculate(tree,node);
     }
+    update_formula_node(tree, tree->root);
     rebalance(tree->root);
     tree->size++;
     return node;
@@ -134,25 +135,36 @@ char* calculate(struct AVLTree* tree, struct Node* node){
     char* val = "INVALID";
     char* formula = node->formula ;
     // Find index of operator
-    int i ;
+    int i,c ;
     char op = NULL;
-    for (i = 0 ; i < strlen(formula) ; i++){
-        if(formula[i]=='+') op = '+';
-        else if(formula[i]=='-') op = '-';
-        else if(formula[i]=='*') op = '*';
-        else if(formula[i]=='/') op = '/';
-        
+    for (c = 0 ; c < strlen(formula) ; c++){
+        if(formula[c]=='+'){
+            op = '+';
+            i = c;
+        }
+        else if(formula[c]=='-'){
+            op = '-';
+            i = c;
+        }
+        else if(formula[c]=='*'){
+            op = '*';
+            i = c;
+        }
+        else if(formula[c]=='/'){
+            op = '/';
+            i = c;
+        }
         if(op != NULL) break;
     }
-    if (op == NULL) return NULL;
+    if (op == NULL) return val;
     // Read first operand (x)
     struct Node *node1,*node2;
     // find last index of X1
-    char X1[3] ;
-    char Y1[20] ;
+    char* X1 = malloc(sizeof(char)*3) ;
+    char* Y1 = malloc(sizeof(char)*20) ;
     int iX1 ;
     for (iX1= 0 ; iX1 < i ; iX1++){
-        if (node->formula[iX1] <= 90 || node->formula[iX1] >= 64){
+        if (node->formula[iX1] <= 90 && node->formula[iX1] >= 64){
             // X Position
             int X1len = (int) strlen(X1) ;
             if(X1len==0){
@@ -162,7 +174,7 @@ char* calculate(struct AVLTree* tree, struct Node* node){
                 X1[X1len] = node->formula[iX1];
                 X1[X1len+1] = '\0' ;
             }
-        }else if (node->formula[iX1] <= 57 || node->formula[iX1] >= 48){
+        }else if (node->formula[iX1] <= 57 && node->formula[iX1] >= 48){
             // Y Position
             int Y1len = (int) strlen(Y1) ;
             Y1[Y1len] = node->formula[iX1];
@@ -170,11 +182,12 @@ char* calculate(struct AVLTree* tree, struct Node* node){
         }
     }
     // find last index of X1
-    char X2[3] ;
-    char Y2[20] ;
+    DEBUG_PRINT("opi=%d X1=%s Y1=%s\n",i,X1,Y1);
+    char* X2 = malloc(sizeof(char)*3) ;
+    char* Y2 = malloc(sizeof(char)*20) ;
     int iX2 ;
-    for (iX2 = i+1 ; iX2 < i ; iX2++){
-        if (node->formula[iX2] <= 90 || node->formula[iX2] >= 64){
+    for (iX2 = i; iX2 < strlen(node->formula) ; iX2++){
+        if (node->formula[iX2] <= 90 && node->formula[iX2] >= 64){
             // X Position
             int X2len = (int) strlen(X2) ;
             if(X2len==0){
@@ -184,13 +197,14 @@ char* calculate(struct AVLTree* tree, struct Node* node){
                 X2[X2len] = node->formula[iX2];
                 X2[X2len+1] = '\0' ;
             }
-        }else if (node->formula[iX2] <= 57 || node->formula[iX2] >= 48){
+        }else if (node->formula[iX2] <= 57 && node->formula[iX2] >= 48){
             // Y Position
             int Y2len = (int) strlen(Y2) ;
             Y2[Y2len] = node->formula[iX2];
             Y2[Y2len+1] = '\0';
         }
     }
+    DEBUG_PRINT("opi=%d X2=%s Y2=%s\n",i,X2,Y2);
     node1 = get_node(tree, X1, Y1);
     node2 = get_node(tree, X2, Y2);
     int result ;
@@ -211,6 +225,9 @@ char* calculate(struct AVLTree* tree, struct Node* node){
             result = atoi(node1->val)/atoi(node2->val);
             break;
     }
-    if(result)itoa(result, val, 10);
+    char* buffer = malloc(sizeof(char)*10);
+    sprintf(buffer, "%d", result);
+    val = buffer;
+    node->val = val;
     return val;
 }

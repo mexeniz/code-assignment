@@ -22,11 +22,11 @@ struct Node{
 
 struct Node* node_init(char* val, char* formula, int i, int j);
 int is_leaf(struct Node* node);
-int is_formula(struct Node* node);
-int balance_val(struct Node* node);
-int set_height(struct Node* node);
+int is_formula(struct Node *node);
 struct Node* rotate_left_child(struct Node *node);
 struct Node* rotate_right_child(struct Node *node);
 struct Node* rebalance(struct Node *node);
+int set_height(struct Node *node);
+int balance_val(struct Node* node);
 
 #endif /* node_h */
