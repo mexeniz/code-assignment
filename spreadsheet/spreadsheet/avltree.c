@@ -49,7 +49,7 @@ struct Node* get_node_i(struct AVLTree* tree,int i, int j){
         }
     }
     return NULL ;
-    
+
 }
 struct Node* get_node(struct AVLTree* tree,char* x, char* y){
     // Map Position A1 -> x=0 y=0
@@ -65,7 +65,7 @@ struct Node* get_node(struct AVLTree* tree,char* x, char* y){
         i = x[0]*26+x[1]-65;
     }
     int j = atoi(y)-1;
-    
+
     struct Node* r = tree->root;
     while(r != NULL){
         if (r->x == i && r->y ==j) return r;
@@ -77,7 +77,7 @@ struct Node* get_node(struct AVLTree* tree,char* x, char* y){
         }
     }
     return NULL ;
-    
+
 }
 struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, char* y){
     // Map Position A1 -> x=0 y=0
@@ -133,8 +133,8 @@ struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, c
     rebalance(tree->root);
     tree->size++;
     return node;
-    
-    
+
+
 }
 void remove_node(struct AVLTree* tree, char* x, char* y){
     struct Node* node = get_node(tree, x, y);
@@ -143,7 +143,7 @@ void remove_node(struct AVLTree* tree, char* x, char* y){
         rebalance(tree->root);
         tree->size--;
     }
-    
+
 }
 
 char* calculate(struct AVLTree* tree, struct Node* node){
@@ -237,11 +237,11 @@ char* operation(char op, char* opr1 ,char* opr2){
         case '-':
             result = atoi(opr1)-atoi(opr2);
             break;
-            
+
         case '*':
             result = atoi(opr1)*atoi(opr2);
             break;
-            
+
         case '/':
             result = atoi(opr1)/atoi(opr2);
             break;
@@ -249,4 +249,30 @@ char* operation(char op, char* opr1 ,char* opr2){
     char* buffer = malloc(sizeof(char)*10);
     sprintf(buffer, "%d", result);
     return buffer;
+}
+void split_pos(char** split,char* pos){
+    char* x = malloc(sizeof(char)*3) ;
+    char* y = malloc(sizeof(char)*20) ;
+    int i ;
+    for (i = 0 ; i < strlen(pos) ; i++){
+        if (pos[i] <= 90 && pos[i] >= 64){
+            // X Position
+            int len = (int) strlen(x) ;
+            if(len==0){
+                x[len] = pos[i];
+                x[len+1] = '\0' ;
+            }else if(len==1){
+                x[len] = pos[i];
+                x[len+1] = '\0' ;
+            }
+        }else if (pos[i] <= 57 && pos[i] >= 48){
+            // Y Position
+            int len = (int) strlen(y) ;
+            y[len] = pos[i];
+            y[len+1] = '\0';
+        }
+    }
+    // printf("Split X=%s Y=%s", x, y);
+    split[0] = x ;
+    split[1] = y ;
 }

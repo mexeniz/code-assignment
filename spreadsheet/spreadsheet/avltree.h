@@ -28,5 +28,6 @@ void update_formula_node(struct AVLTree* tree, struct Node* node);
 struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, char* y);
 void remove_node(struct AVLTree* tree, char* x, char* y);
 char* calculate(struct AVLTree* tree, struct Node* node);
+void split_pos(char** split, char* pos);
 
 #endif /* avltree_h */
