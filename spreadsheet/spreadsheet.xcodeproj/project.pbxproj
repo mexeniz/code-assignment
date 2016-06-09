@@ -34,6 +34,7 @@
 		CFF287691D090E2A0053F10D /* avltree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = avltree.h; path = ../avltree.h; sourceTree = "<group>"; };
 		CFF2876B1D0912200053F10D /* node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = node.c; path = ../node.c; sourceTree = "<group>"; };
 		CFF2876C1D0912200053F10D /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node.h; path = ../node.h; sourceTree = "<group>"; };
+		CFF2876F1D092E5B0053F10D /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +74,7 @@
 				CF6660F31D082A2D0016B31C /* main.c */,
 				CF6660FA1D082B0C0016B31C /* spreadsheet.c */,
 				CF6660FB1D082B0C0016B31C /* spreadsheet.h */,
+				CFF2876F1D092E5B0053F10D /* debug.h */,
 			);
 			path = spreadsheet;
 			sourceTree = "<group>";

@@ -15,16 +15,9 @@ struct Node* node_init(char* val, char* formula, int i, int j){
     new_node->formula = formula;
     new_node->x = i;
     new_node->y = j;
-    new_node->parent = NULL;
+    new_node->height = 0;
     new_node->right = NULL;
     new_node->left = NULL;
-//    // Cell Position A1
-//    int x
-//    if (i[0] == 'A'){
-//        x = 0;
-//    }else if (x[])
-//    int y = atoi(j);
-//    
     return new_node;
 }
 int is_leaf(struct Node* node){
@@ -38,4 +31,49 @@ int is_formula(struct Node* node){
         return 1;
     }
     return 0;
+}
+int balance_val(struct Node* node){
+    return (node->right)->height - (node->left)->height ;
+}
+int set_height(struct Node* node){
+    int max_height = (node->right)->height > (node->left)->height ? (node->right)->height : (node->left)->height ;
+    node->height = 1 + max_height;
+    return node->height ;
+}
+struct Node* rotate_left_child(struct Node *node){
+    if(node ==NULL) return NULL;
+    struct Node* new_root = node->left;
+    node->left = new_root->right;
+    new_root->right = node;
+    set_height(new_root);
+    set_height(new_root->right);
+    return new_root;
+}
+struct Node* rotate_right_child(struct Node *node){
+    if(node ==NULL) return NULL;
+    struct Node* new_root = node->right;
+    node->right = new_root->left;
+    new_root->left = node;
+    set_height(new_root);
+    set_height(new_root->left);
+    return new_root;
+}
+struct Node* rebalance(struct Node *node){
+    if (node==NULL) return node;
+    int balance = balance_val(node);
+    if(balance==-2){
+        int balance_left = balance_val(node->left);
+        if(balance_left == 1){
+            node->left = rotate_right_child(node->left);
+        }
+        node = rotate_left_child(node);
+    }else if(balance==2){
+        int balance_right = balance_val(node->right);
+        if(balance_right ==-1){
+            node->right = rotate_left_child(node);
+        }
+        node = rotate_right_child(node);
+    }
+    set_height(node);
+    return node ;
 }

@@ -7,11 +7,20 @@
 //
 
 #include <stdio.h>
-
+#include "spreadsheet.h"
+#include "debug.h"
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
-    
+    struct Spreadsheet* sheet = spreadsheet_init("Test", 1, 1);
+    add_node(sheet->tree, "20", NULL, "A", "1");
+    add_node(sheet->tree, "30", NULL, "A", "2");
+    add_node(sheet->tree, "50", "", "A", "3");
+    add_node(sheet->tree, "2", NULL, "B", "2");
+    add_node(sheet->tree, "", "A1+A2", "C", "1");
+    add_node(sheet->tree, "", "", "C", "2");
+    DEBUG_PRINT("FINISH INIT\n");
+    print_tree(sheet->tree);
     while(1){
         int x;
         scanf("%d",&x);

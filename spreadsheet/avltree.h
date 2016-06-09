@@ -13,14 +13,19 @@
 #include <stdlib.h>
 #include "node.h"
 #include <string.h>
+#include "debug.h"
 
 struct AVLTree {
     struct Node* root;
     int size;
 };
 struct AVLTree* avltree_init();
-void inorder(struct AVLTree* tree);
+void print_tree(struct AVLTree* tree);
+struct Node* get_node(struct AVLTree* tree, char* x, char* y);
+void inorder(struct AVLTree* tree, struct Node* node);
+void update_formula_node(struct AVLTree* tree, struct Node* node);
 struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, char* y);
-void remove_node(struct AVLTree* tree, int x, int y);
+void remove_node(struct AVLTree* tree, char* x, char* y);
+char* calculate(struct AVLTree* tree, struct Node* node);
 
 #endif /* avltree_h */

@@ -17,4 +17,7 @@ struct Spreadsheet{
     int col;
     int n_cell;
 };
+
+struct Spreadsheet* spreadsheet_init(char* name,int row,int col);
+
 #endif /* spreadsheet_h */
