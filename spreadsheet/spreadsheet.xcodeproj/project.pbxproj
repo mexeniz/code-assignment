@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		CF6660F41D082A2D0016B31C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CF6660F31D082A2D0016B31C /* main.c */; };
 		CF6660FC1D082B0C0016B31C /* spreadsheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CF6660FA1D082B0C0016B31C /* spreadsheet.c */; };
+		CFF2876A1D090E2A0053F10D /* avltree.c in Sources */ = {isa = PBXBuildFile; fileRef = CFF287681D090E2A0053F10D /* avltree.c */; };
+		CFF2876D1D0912200053F10D /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = CFF2876B1D0912200053F10D /* node.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +30,10 @@
 		CF6660F31D082A2D0016B31C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		CF6660FA1D082B0C0016B31C /* spreadsheet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = spreadsheet.c; sourceTree = "<group>"; };
 		CF6660FB1D082B0C0016B31C /* spreadsheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spreadsheet.h; sourceTree = "<group>"; };
+		CFF287681D090E2A0053F10D /* avltree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = avltree.c; path = ../avltree.c; sourceTree = "<group>"; };
+		CFF287691D090E2A0053F10D /* avltree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = avltree.h; path = ../avltree.h; sourceTree = "<group>"; };
+		CFF2876B1D0912200053F10D /* node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = node.c; path = ../node.c; sourceTree = "<group>"; };
+		CFF2876C1D0912200053F10D /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node.h; path = ../node.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +66,10 @@
 		CF6660F21D082A2D0016B31C /* spreadsheet */ = {
 			isa = PBXGroup;
 			children = (
+				CFF2876B1D0912200053F10D /* node.c */,
+				CFF2876C1D0912200053F10D /* node.h */,
+				CFF287681D090E2A0053F10D /* avltree.c */,
+				CFF287691D090E2A0053F10D /* avltree.h */,
 				CF6660F31D082A2D0016B31C /* main.c */,
 				CF6660FA1D082B0C0016B31C /* spreadsheet.c */,
 				CF6660FB1D082B0C0016B31C /* spreadsheet.h */,
@@ -124,6 +134,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF6660FC1D082B0C0016B31C /* spreadsheet.c in Sources */,
+				CFF2876D1D0912200053F10D /* node.c in Sources */,
+				CFF2876A1D090E2A0053F10D /* avltree.c in Sources */,
 				CF6660F41D082A2D0016B31C /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +257,7 @@
 				CF6660F91D082A2D0016B31C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
