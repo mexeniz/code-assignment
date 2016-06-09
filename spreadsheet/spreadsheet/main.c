@@ -9,7 +9,19 @@
 #include <stdio.h>
 #include "spreadsheet.h"
 #include "debug.h"
+#include<signal.h>
+#include<unistd.h>
+
+void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+        printf("received SIGINT\n");
+}
+
 int main(int argc, const char * argv[]) {
+    if (signal(SIGINT, sig_handler) == SIG_ERR)
+        printf("\ncan't catch SIGINT\n");
+    
     // insert code here...
     printf("Hello, World!\n");
     struct Spreadsheet* sheet = spreadsheet_init("Test", 1, 1);
@@ -25,12 +37,20 @@ int main(int argc, const char * argv[]) {
     add_node(sheet->tree, "", "B2*A3", "C", "3");
     printf("Edit cell\n");
     add_node(sheet->tree, "25", NULL, "A", "3");
+    char* res = sum(sheet, "A", "1", "A", "3");
+    printf("%s",res);
     DEBUG_PRINT("FINISH INIT\n");
     print_tree(sheet->tree);
+    
+    printf("Start Interface\n");
     while(1){
-        int x;
-        scanf("%d",&x);
-        switch (x) {
+        char cmd[256];
+        scanf("%s", &cmd);
+        char* token = strtok(cmd, " ");
+        printf("token: %s\n", token);
+        token = strtok(NULL, " ");
+        
+        switch (0) {
             case 0:
                 break;
                 
@@ -39,5 +59,4 @@ int main(int argc, const char * argv[]) {
                 break;
         }
     }
-
 }

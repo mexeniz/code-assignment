@@ -22,6 +22,7 @@ struct AVLTree {
 struct AVLTree* avltree_init();
 void print_tree(struct AVLTree* tree);
 struct Node* get_node(struct AVLTree* tree, char* x, char* y);
+struct Node* get_node_i(struct AVLTree* tree,int i, int j);
 void inorder(struct AVLTree* tree, struct Node* node);
 void update_formula_node(struct AVLTree* tree, struct Node* node);
 struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, char* y);

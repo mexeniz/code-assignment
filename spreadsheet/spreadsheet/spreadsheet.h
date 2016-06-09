@@ -19,5 +19,6 @@ struct Spreadsheet{
 };
 
 struct Spreadsheet* spreadsheet_init(char* name,int row,int col);
+char* sum(struct Spreadsheet* sheet, char* x1, char* y1, char* x2, char* y2);
 
 #endif /* spreadsheet_h */

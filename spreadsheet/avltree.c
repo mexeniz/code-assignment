@@ -36,6 +36,21 @@ void update_formula_node(struct AVLTree* tree, struct Node* node){
     }
     update_formula_node(tree, node->right);
 }
+struct Node* get_node_i(struct AVLTree* tree,int i, int j){
+    // Map Position A1 -> x=0 y=0
+    struct Node* r = tree->root;
+    while(r != NULL){
+        if (r->x == i && r->y ==j) return r;
+        int cmp = (i > r->x) || (i == r->x && j > r->y);
+        if (cmp){
+            r = r->right;
+        }else{
+            r = r->left;
+        }
+    }
+    return NULL ;
+    
+}
 struct Node* get_node(struct AVLTree* tree,char* x, char* y){
     // Map Position A1 -> x=0 y=0
     int i = -1;
