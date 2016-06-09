@@ -28,5 +28,6 @@ struct Node* rotate_right_child(struct Node *node);
 struct Node* rebalance(struct Node *node);
 int set_height(struct Node *node);
 int balance_val(struct Node* node);
+char* operation(char op, char* opr1 ,char* opr2);
 
 #endif /* node_h */

@@ -222,27 +222,31 @@ char* calculate(struct AVLTree* tree, struct Node* node){
     DEBUG_PRINT("opi=%d X2=%s Y2=%s\n",i,X2,Y2);
     node1 = get_node(tree, X1, Y1);
     node2 = get_node(tree, X2, Y2);
-    int result ;
     if(node1 == NULL || node2 == NULL) return NULL;
+    else val = operation(op, node1->val,node2->val);
+    node->val = val;
+    return val;
+}
+char* operation(char op, char* opr1 ,char* opr2){
+    int result ;
+    if(opr1 == NULL || opr2 == NULL) return NULL;
     switch (op) {
         case '+':
-            result = atoi(node1->val)+atoi(node2->val);
+            result = atoi(opr1)+atoi(opr2);
             break;
         case '-':
-            result = atoi(node1->val)-atoi(node2->val);
+            result = atoi(opr1)-atoi(opr2);
             break;
             
         case '*':
-            result = atoi(node1->val)*atoi(node2->val);
+            result = atoi(opr1)*atoi(opr2);
             break;
             
         case '/':
-            result = atoi(node1->val)/atoi(node2->val);
+            result = atoi(opr1)/atoi(opr2);
             break;
     }
     char* buffer = malloc(sizeof(char)*10);
     sprintf(buffer, "%d", result);
-    val = buffer;
-    node->val = val;
-    return val;
+    return buffer;
 }
