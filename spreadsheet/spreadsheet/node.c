@@ -9,12 +9,14 @@
 #include "node.h"
 #include <stdlib.h>
 
-struct Node* node_init(char* val, char* formula, int i, int j){
-    struct Node* new_node = malloc(sizeof(struct Node));
+struct Node* node_init(char* val, char* formula, char* posX, char* posY, int x, int y){
+    struct Node* new_node = (struct Node* )malloc(sizeof(struct Node));
     new_node->val = val;
     new_node->formula = formula;
-    new_node->x = i;
-    new_node->y = j;
+    new_node->posX = posX;
+    new_node->posY = posY;
+    new_node->x = x;
+    new_node->y = y;
     new_node->height = 0;
     new_node->right = NULL;
     new_node->left = NULL;

@@ -13,6 +13,8 @@
 struct Node{
     char* val;
     char* formula;
+    char* posX;
+    char* posY;
     int x;
     int y;
     int height;
@@ -20,7 +22,7 @@ struct Node{
     struct Node* right;
 };
 
-struct Node* node_init(char* val, char* formula, int i, int j);
+struct Node* node_init(char* val, char* formula, char* posX, char* posY, int x, int y);
 int is_leaf(struct Node* node);
 int is_formula(struct Node *node);
 struct Node* rotate_left_child(struct Node *node);

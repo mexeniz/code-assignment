@@ -22,9 +22,9 @@ void inorder(struct AVLTree* tree, struct Node* node){
     inorder(tree, node->left);
     //Print Node Info
     if(is_formula(node)){
-        printf("node %d:%d val=%s formula=%s\n",node->x,node->y,node->val,node->formula);
+        printf("CELL %s%s Val=%s Formula=%s\n",node->posX,node->posY,node->val,node->formula);
     }else{
-        printf("node %d:%d val=%s\n",node->x,node->y,node->val);
+        printf("CELL %s%s Val=%s\n",node->posX,node->posY,node->val);
     }
     inorder(tree, node->right);
 }
@@ -93,7 +93,7 @@ struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, c
         i = x[0]*26+x[1]-65;
     }
     int j = atoi(y)-1;
-    struct Node* node = node_init(val, formula, i, j);
+    struct Node* node = node_init(val, formula,x,y, i, j);
     if (tree->root == NULL){
         tree->root = node;
     }
