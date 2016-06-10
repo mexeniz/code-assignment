@@ -7,3 +7,11 @@
 //
 
 #include "myUtils.h"
+
+int validateIntBetween(int validated, int lowerBound, int upperBound)
+{
+    if (validated >= lowerBound && validated <= upperBound)
+        return validated-lowerBound;
+    else
+        return -1;
+}

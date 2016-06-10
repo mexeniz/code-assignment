@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int validateIntBetween(int validated, int lowerBound, int upperBound);
+
 #endif /* myUtils_h */

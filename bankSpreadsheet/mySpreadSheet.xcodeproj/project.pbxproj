@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0843B75E1D09122A00728716 /* myUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = 0843B75C1D09122A00728716 /* myUtils.c */; };
+		0843B7601D091B2B00728716 /* cell.c in Sources */ = {isa = PBXBuildFile; fileRef = 0843B75F1D091B2B00728716 /* cell.c */; };
 		0891E23B1D06CA5C00526466 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 0891E23A1D06CA5C00526466 /* main.c */; };
+		0891E2441D06CF4E00526466 /* spreadsheet.c in Sources */ = {isa = PBXBuildFile; fileRef = 0891E2431D06CF4E00526466 /* spreadsheet.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +26,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0843B75C1D09122A00728716 /* myUtils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = myUtils.c; sourceTree = "<group>"; };
+		0843B75D1D09122A00728716 /* myUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myUtils.h; sourceTree = "<group>"; };
+		0843B75F1D091B2B00728716 /* cell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cell.c; sourceTree = "<group>"; };
 		0891E2371D06CA5C00526466 /* mySpreadSheet */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mySpreadSheet; sourceTree = BUILT_PRODUCTS_DIR; };
 		0891E23A1D06CA5C00526466 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		0891E2411D06CA8600526466 /* cell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cell.h; sourceTree = "<group>"; };
+		0891E2421D06CF4100526466 /* spreadsheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spreadsheet.h; sourceTree = "<group>"; };
+		0891E2431D06CF4E00526466 /* spreadsheet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = spreadsheet.c; sourceTree = "<group>"; };
+		0891E2451D06E1EF00526466 /* debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +68,13 @@
 			isa = PBXGroup;
 			children = (
 				0891E23A1D06CA5C00526466 /* main.c */,
+				0843B75C1D09122A00728716 /* myUtils.c */,
+				0843B75D1D09122A00728716 /* myUtils.h */,
+				0891E2411D06CA8600526466 /* cell.h */,
+				0843B75F1D091B2B00728716 /* cell.c */,
+				0891E2421D06CF4100526466 /* spreadsheet.h */,
+				0891E2431D06CF4E00526466 /* spreadsheet.c */,
+				0891E2451D06E1EF00526466 /* debug.h */,
 			);
 			path = mySpreadSheet;
 			sourceTree = "<group>";
@@ -118,7 +135,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0891E2441D06CF4E00526466 /* spreadsheet.c in Sources */,
 				0891E23B1D06CA5C00526466 /* main.c in Sources */,
+				0843B75E1D09122A00728716 /* myUtils.c in Sources */,
+				0843B7601D091B2B00728716 /* cell.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +259,7 @@
 				0891E2401D06CA5C00526466 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
