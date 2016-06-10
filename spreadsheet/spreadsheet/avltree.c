@@ -175,53 +175,15 @@ char* calculate(struct AVLTree* tree, struct Node* node){
     // Read first operand (x)
     struct Node *node1,*node2;
     // find last index of X1
-    char* X1 = malloc(sizeof(char)*3) ;
-    char* Y1 = malloc(sizeof(char)*20) ;
-    int iX1 ;
-    for (iX1= 0 ; iX1 < i ; iX1++){
-        if (node->formula[iX1] <= 90 && node->formula[iX1] >= 64){
-            // X Position
-            int X1len = (int) strlen(X1) ;
-            if(X1len==0){
-                X1[X1len] = node->formula[iX1];
-                X1[X1len+1] = '\0' ;
-            }else if(X1len==1){
-                X1[X1len] = node->formula[iX1];
-                X1[X1len+1] = '\0' ;
-            }
-        }else if (node->formula[iX1] <= 57 && node->formula[iX1] >= 48){
-            // Y Position
-            int Y1len = (int) strlen(Y1) ;
-            Y1[Y1len] = node->formula[iX1];
-            Y1[Y1len+1] = '\0';
-        }
-    }
+    char* pos1[2];
+    char* pos2[2];
+    split_pos_range(pos1,node->formula, 0,i);
     // find last index of X1
-    DEBUG_PRINT("opi=%d X1=%s Y1=%s\n",i,X1,Y1);
-    char* X2 = malloc(sizeof(char)*3) ;
-    char* Y2 = malloc(sizeof(char)*20) ;
-    int iX2 ;
-    for (iX2 = i; iX2 < strlen(node->formula) ; iX2++){
-        if (node->formula[iX2] <= 90 && node->formula[iX2] >= 64){
-            // X Position
-            int X2len = (int) strlen(X2) ;
-            if(X2len==0){
-                X2[X2len] = node->formula[iX2];
-                X2[X2len+1] = '\0' ;
-            }else if(X2len==1){
-                X2[X2len] = node->formula[iX2];
-                X2[X2len+1] = '\0' ;
-            }
-        }else if (node->formula[iX2] <= 57 && node->formula[iX2] >= 48){
-            // Y Position
-            int Y2len = (int) strlen(Y2) ;
-            Y2[Y2len] = node->formula[iX2];
-            Y2[Y2len+1] = '\0';
-        }
-    }
-    DEBUG_PRINT("opi=%d X2=%s Y2=%s\n",i,X2,Y2);
-    node1 = get_node(tree, X1, Y1);
-    node2 = get_node(tree, X2, Y2);
+    DEBUG_PRINT("opi=%d X1=%s Y1=%s\n",i,pos1[0],pos1[1]);
+    split_pos_range(pos2,node->formula,i,(int)strlen(node->formula));
+    DEBUG_PRINT("opi=%d X2=%s Y2=%s\n",i,pos2[0],pos2[1]);
+    node1 = get_node(tree, pos1[0],pos1[1]);
+    node2 = get_node(tree, pos2[0],pos2[1]);
     if(node1 == NULL || node2 == NULL) return NULL;
     else val = operation(op, node1->val,node2->val);
     node->val = val;
@@ -243,6 +205,10 @@ char* operation(char op, char* opr1 ,char* opr2){
             break;
 
         case '/':
+            if (atoi(opr2) == 0) {
+                printf("Cannot divide by zero!\n");
+                break;
+            }
             result = atoi(opr1)/atoi(opr2);
             break;
     }

@@ -44,15 +44,15 @@ int main(int argc, const char * argv[]) {
     print_tree(sheet->tree);
     
     printf("**********C Spreadsheet***********\n");
-    printf("Start Interface -> cell format X:Y\n");
-    printf("set <cell> <value>\n");
-    printf("get <cell>\n");
-    printf("recalc\n");
-    printf("sum <cell1> <cell2>\n");
+    printf("Start Interface -> cell format XY\n");
+    printf("1 : set <cell> <value>, set <cell> =<formula>\n");
+    printf("2 : get <cell>\n");
+    printf("3 : recalc\n");
+    printf("4 : sum <cell1> <cell2>\n");
     printf("**********************************\n");
     
     while(1){
-        printf("cmd: ");
+        printf("$sheet-cmd: ");
         char cmd[50];
         fgets(cmd,50,stdin);
         char* token = strtok(cmd, " ");
@@ -71,6 +71,7 @@ int main(int argc, const char * argv[]) {
         else if (strcmp(attr[0],"get") == 0) c = 1;
         else if (strcmp(attr[0],"recalc") == 0) c = 2;
         else if (strcmp(attr[0],"sum") == 0) c = 3;
+        else if (attr[0][0]==24) c = 4;
         char* pos[2] ;
         char* pos2[2] ;
         struct Node* node;
@@ -83,12 +84,13 @@ int main(int argc, const char * argv[]) {
                 }
                 
                 split_pos(pos,attr[1]);
+                
+                node = get_node(sheet->tree,pos[0],pos[1]);
                 if(node == NULL){
                     // New Node
                     node = add_node(sheet->tree, "", "", pos[0],pos[1] );
-                }else{
-                    node = get_node(sheet->tree,pos[0],pos[1]);
                 }
+                
                 char f = attr[2][0];
                 if(f == '='){
                     // Add formula cell
@@ -96,15 +98,14 @@ int main(int argc, const char * argv[]) {
                     for(c = 1 ; c < strlen(attr[2]) ; c++){
                         formula[c-1] = attr[2][c] ;
                     }
-                    //DEBUG_PRINT("New Formula");
+                    DEBUG_PRINT("New Formula");
                     node->formula = formula;
                 }else{
                     // Add value cell
-                    //DEBUG_PRINT("New Val");
-                    printf("New Val.\n");
+                    DEBUG_PRINT("New Val");
                     node->val = attr[2];
                 }
-                printf("X=%s Y=%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
+                printf("CELL %s%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
                 update_formula_node(sheet->tree,sheet->tree->root);
                 break;
             case 1:
@@ -115,7 +116,7 @@ int main(int argc, const char * argv[]) {
                     printf("No cell at X=%s Y=%s\n",pos[0],pos[1]);
                     continue;
                 }
-                printf("X=%s Y=%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
+                printf("CELL %s%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
                 break;
             case 2:
                 //RECALCULATE
@@ -129,11 +130,20 @@ int main(int argc, const char * argv[]) {
                 char* sum_res = sum(sheet, pos[0], pos[1], pos2[0], pos2[1]);
                 printf("sum(%s%s:%s%s)=%s\n",pos[0], pos[1], pos2[0], pos2[1],sum_res);
                 break;
-
+            case 4:
+                //CTRL+X = CANCEL
+                printf("Exit Program...");
+                exit(1);
+                break;
             default:
                 printf("Wrong command!\n");
                 break;
         }
+        
+        // Clean variable
+        pos[2] = NULL ;
+        pos2[2] = NULL ;
+        node = NULL;
     }
 }
 char *trimwhitespace(char *str)
