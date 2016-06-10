@@ -173,17 +173,17 @@ char* calculate(struct AVLTree* tree, struct Node* node){
         if(op != NULL) break;
     }
     if (op == NULL) return val;
-    
+
     struct Node *node1,*node2;
     char* pos1[2];
     char* pos2[2];
-    
+
     if(i == -1) return NULL;
     split_pos_range(pos1,node->formula, 0,i);
     DEBUG_PRINT("opi=%d X1=%s Y1=%s\n",i,pos1[0],pos1[1]);
     split_pos_range(pos2,node->formula,i,(int)strlen(node->formula));
     DEBUG_PRINT("opi=%d X2=%s Y2=%s\n",i,pos2[0],pos2[1]);
-    
+
     node1 = get_node(tree, pos1[0],pos1[1]);
     node2 = get_node(tree, pos2[0],pos2[1]);
     if(node1 == NULL || node2 == NULL) return NULL;

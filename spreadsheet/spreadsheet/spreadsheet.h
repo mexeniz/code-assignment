@@ -19,7 +19,11 @@ struct Spreadsheet{
 };
 
 struct Spreadsheet* spreadsheet_init(char* name,int row,int col);
+char* sum_list(struct Spreadsheet* sheet, int list_len, char* pos_list[list_len]);
 char* sum(struct Spreadsheet* sheet, char* x1, char* y1, char* x2, char* y2);
 void print_sheet(struct Spreadsheet* sheet);
+void interpret_pos(int** pos_int, char* x, char* y);
+void interpret_pos2(int** pos_int, char* cord);
+char* trimwhitespace(char *str);
 
 #endif /* spreadsheet_h */

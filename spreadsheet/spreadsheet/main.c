@@ -13,22 +13,24 @@
 #include <signal.h>
 #include <unistd.h>
 
-char* trimwhitespace(char *str);
 void sig_handler(int signo);
 void print_help();
 void sample_data(struct Spreadsheet* sheet);
+void sum_cell_list(int list_len, char* list[list_len]);
+
+struct Spreadsheet* sheet;
 
 int main(int argc, const char * argv[]) {
       if (signal(SIGINT, sig_handler) == SIG_ERR)
           printf("\ncan't catch SIGINT\n");
       if (signal(SIGHUP, sig_handler) == SIG_ERR)
           printf("\ncan't catch SIGHUP\n");
-    
-    struct Spreadsheet* sheet = spreadsheet_init("Test", 1, 1);
+
+    sheet = spreadsheet_init("Test", 1, 1);
     sample_data(sheet);
-    
+
     print_help();
-    
+
     while(1){
         printf("$sheet-cmd: ");
         char* cmd = (char*) malloc(sizeof(char)*50);
@@ -50,12 +52,14 @@ int main(int argc, const char * argv[]) {
         else if (strcmp(attr[0],"get") == 0) c = 1;
         else if (strcmp(attr[0],"recalc") == 0) c = 2;
         else if (strcmp(attr[0],"sum") == 0) c = 3;
-        else if (attr[0][0]==24) c = 4;
-        else if (strcmp(attr[0],"list") == 0) c = 5;
-                 
+        else if (strcmp(attr[0],"sum-list") == 0) c = 4;
+        else if (attr[0][0]==24) c = 5;
+        else if (strcmp(attr[0],"list") == 0) c = 6;
+
         char* pos[2] ;
         char* pos2[2] ;
         struct Node* node;
+        int n_cell ;
         switch (c) {
             case 0:
                 trimwhitespace(attr[2]);
@@ -63,15 +67,15 @@ int main(int argc, const char * argv[]) {
                     printf("Attribute is invalid.\n");
                     continue;
                 }
-                
+
                 split_pos(pos,attr[1]);
-                
+
                 node = get_node(sheet->tree,pos[0],pos[1]);
                 if(node == NULL){
                     // New Node
                     node = add_node(sheet->tree, "", "", pos[0],pos[1] );
                 }
-                
+
                 char f = attr[2][0];
                 if(f == '='){
                     // Add formula cell
@@ -112,11 +116,20 @@ int main(int argc, const char * argv[]) {
                 printf("sum(%s%s:%s%s)=%s\n",pos[0], pos[1], pos2[0], pos2[1],sum_res);
                 break;
             case 4:
+                //SUM LIST
+                // ...BUG WARNING...
+                // SEGMENTATION FAUlT :(
+                // Trim last item
+                trimwhitespace(attr[i-1]);
+                sum_cell_list(i,attr);
+                break;
+
+            case 5:
                 //CTRL+X = CANCEL
                 printf("Exit Program...");
                 exit(1);
                 break;
-            case 5:
+            case 6:
                 //LIST
                 print_sheet(sheet);
                 break;
@@ -125,32 +138,17 @@ int main(int argc, const char * argv[]) {
                 print_help();
                 break;
         }
-        
+
         // Clean variable
         pos[2] = NULL ;
         pos2[2] = NULL ;
         node = NULL;
+        n_cell = 0 ;
     }
 }
-char *trimwhitespace(char *str)
-{
-    char *end;
-    
-    // Trim leading space
-    while(isspace(*str)) str++;
-    
-    if(*str == 0)  // All spaces?
-        return str;
-    
-    // Trim trailing space
-    end = str + strlen(str) - 1;
-    while(end > str && isspace(*end)) end--;
-    
-    // Write new null terminator
-    *(end+1) = 0;
-    
-    return str;
-}
+
+
+
 void sig_handler(int signo)
 {
     //printf("%d\n",signo);
@@ -173,11 +171,12 @@ void sig_handler(int signo)
 void print_help(){
     printf("**********C Spreadsheet***********\n");
     printf("CLI -> cell format XY\n");
-    printf("1 : set <cell> <value>, set <cell> =<formula>\n");
-    printf("2 : get <cell>\n");
+    printf("1 : set <cell> <value>, set <cell> =<formula> ; ex. set B1 =A2+A3\n");
+    printf("2 : get <cell> ; ex. get A1\n");
     printf("3 : recalc\n");
-    printf("4 : sum <cell1> <cell2>\n");
-    printf("5 : list\n");
+    printf("4 : sum <cell1> <cell2> ; ex. sum A1 C3\n");
+    printf("!BUG! 5 : sum-list <cell1> <cell2> ... <cell-i> ; ex. sum-list A2 A3 B1 C1\n");
+    printf("6 : list\n");
     printf("**********************************\n");
 }
 void sample_data(struct Spreadsheet *sheet){
@@ -197,5 +196,17 @@ void sample_data(struct Spreadsheet *sheet){
     add_node(sheet->tree, "25", NULL, "A", "3");
     DEBUG_PRINT("FINISH INIT\n");
     // print_sheet(sheet);
+}
+void sum_cell_list(int list_len, char* list[list_len]){
 
+    //Ignore first item (command)
+    int n_cell = list_len -1 ;
+    char* cell_pos[n_cell];
+    int i ;
+    for(i = 1 ; i < n_cell + 1 ; i++){
+        cell_pos[i-1] = list[i] ;
+    }
+
+    char* res = sum_list(sheet, n_cell, cell_pos);
+    printf("sum of %d cells =%s\n", n_cell, res);
 }
