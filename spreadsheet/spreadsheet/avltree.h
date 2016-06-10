@@ -29,5 +29,6 @@ struct Node* add_node(struct AVLTree* tree, char* val, char* formula, char* x, c
 void remove_node(struct AVLTree* tree, char* x, char* y);
 char* calculate(struct AVLTree* tree, struct Node* node);
 void split_pos(char** split, char* pos);
+void split_pos_range(char** split,char* pos,int i, int j);
 
 #endif /* avltree_h */

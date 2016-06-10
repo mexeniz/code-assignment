@@ -276,3 +276,29 @@ void split_pos(char** split,char* pos){
     split[0] = x ;
     split[1] = y ;
 }
+void split_pos_range(char** split,char* pos, int i, int j){
+    char* x = malloc(sizeof(char)*3) ;
+    char* y = malloc(sizeof(char)*20) ;
+    int c ;
+    for (c = i ; c < j ; c++){
+        if (pos[c] <= 90 && pos[c] >= 64){
+            // X Position
+            int len = (int) strlen(x) ;
+            if(len==0){
+                x[len] = pos[c];
+                x[len+1] = '\0' ;
+            }else if(len==1){
+                x[len] = pos[c];
+                x[len+1] = '\0' ;
+            }
+        }else if (pos[c] <= 57 && pos[c] >= 48){
+            // Y Position
+            int len = (int) strlen(y) ;
+            y[len] = pos[c];
+            y[len+1] = '\0';
+        }
+    }
+    // printf("Split X=%s Y=%s", x, y);
+    split[0] = x ;
+    split[1] = y ;
+}

@@ -7,59 +7,65 @@
 //
 
 #include <stdio.h>
+#include <ctype.h>
 #include "spreadsheet.h"
 #include "debug.h"
-#include<signal.h>
-#include<unistd.h>
+#include <signal.h>
+#include <unistd.h>
 
-void sig_handler(int signo)
-{
-    if (signo == SIGINT)
-        printf("received SIGINT\n");
-}
+char *trimwhitespace(char *str);
+void sig_handler(int signo);
 
 int main(int argc, const char * argv[]) {
-    if (signal(SIGINT, sig_handler) == SIG_ERR)
-        printf("\ncan't catch SIGINT\n");
-
+      if (signal(SIGINT, sig_handler) == SIG_ERR)
+          printf("\ncan't catch SIGINT\n");
+      if (signal(SIGHUP, sig_handler) == SIG_ERR)
+          printf("\ncan't catch SIGHUP\n");
+//    if (signal(SIGSTOP, sig_handler) == SIG_ERR)
+//        printf("\ncan't catch SIGSTOP\n");
     // insert code here...
-    printf("Hello, World!\n");
+    
     struct Spreadsheet* sheet = spreadsheet_init("Test", 1, 1);
     add_node(sheet->tree, "20", NULL, "A", "1");
     add_node(sheet->tree, "30", NULL, "A", "2");
     add_node(sheet->tree, "50", NULL, "A", "3");
     add_node(sheet->tree, "2", NULL, "B", "2");
-    printf("Add formula\n");
+    DEBUG_PRINT("Add formula\n");
     add_node(sheet->tree, "", "A1+A2", "C", "1");
-    printf("Add formula\n");
+    DEBUG_PRINT("Add formula\n");
     add_node(sheet->tree, "", "A2/B2", "C", "2");
-    printf("Add formula\n");
+    DEBUG_PRINT("Add formula\n");
     add_node(sheet->tree, "", "B2*A3", "C", "3");
-    printf("Edit cell\n");
+    DEBUG_PRINT("Edit cell\n");
     add_node(sheet->tree, "25", NULL, "A", "3");
     char* res = sum(sheet, "A", "1", "A", "3");
-    printf("%s",res);
+    DEBUG_PRINT("%s",res);
     DEBUG_PRINT("FINISH INIT\n");
     print_tree(sheet->tree);
-
+    
+    printf("**********C Spreadsheet***********\n");
     printf("Start Interface -> cell format X:Y\n");
     printf("set <cell> <value>\n");
     printf("get <cell>\n");
     printf("recalc\n");
     printf("sum <cell1> <cell2>\n");
+    printf("**********************************\n");
+    
     while(1){
+        printf("cmd: ");
         char cmd[50];
         fgets(cmd,50,stdin);
         char* token = strtok(cmd, " ");
 
         char* attr[3];
+        attr[2] = calloc(50, 50);
         int i = 0 ;
         while(token){
             attr[i] = token;
             i++;
             token = strtok(NULL, " ");
         }
-        printf("%s %s %s",attr[0],attr[1],attr[2]);
+        DEBUG_PRINT("%s %s %s",attr[0],attr[1],attr[2]);
         int c = -1;
         if(strcmp(attr[0],"set") == 0) c = 0;
         else if (strcmp(attr[0],"get") == 0) c = 1;
@@ -70,9 +76,34 @@ int main(int argc, const char * argv[]) {
         struct Node* node;
         switch (c) {
             case 0:
+                trimwhitespace(attr[2]);
+                if (strlen(attr[2])==0) {
+                    printf("Attribute is invalid.\n");
+                    continue;
+                }
+                
                 split_pos(pos,attr[1]);
-                node = get_node(sheet->tree,pos[0],pos[1]);
-                node->val = attr[2];
+                if(node == NULL){
+                    // New Node
+                    node = add_node(sheet->tree, "", "", pos[0],pos[1] );
+                }else{
+                    node = get_node(sheet->tree,pos[0],pos[1]);
+                }
+                char f = attr[2][0];
+                if(f == '='){
+                    // Add formula cell
+                    char* formula = (char*) malloc(sizeof(char)*(strlen(attr[2])-1));
+                    for(c = 1 ; c < strlen(attr[2]) ; c++){
+                        formula[c-1] = attr[2][c] ;
+                    }
+                    //DEBUG_PRINT("New Formula");
+                    node->formula = formula;
+                }else{
+                    // Add value cell
+                    //DEBUG_PRINT("New Val");
+                    printf("New Val.\n");
+                    node->val = attr[2];
+                }
                 printf("X=%s Y=%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
                 update_formula_node(sheet->tree,sheet->tree->root);
                 break;
@@ -80,6 +111,10 @@ int main(int argc, const char * argv[]) {
                 //GET A2
                 split_pos(pos,attr[1]);
                 node = get_node(sheet->tree,pos[0],pos[1]);
+                if (node == NULL){
+                    printf("No cell at X=%s Y=%s\n",pos[0],pos[1]);
+                    continue;
+                }
                 printf("X=%s Y=%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
                 break;
             case 2:
@@ -96,8 +131,47 @@ int main(int argc, const char * argv[]) {
                 break;
 
             default:
-                printf("Wrong command!");
+                printf("Wrong command!\n");
                 break;
         }
     }
 }
+char *trimwhitespace(char *str)
+{
+    char *end;
+    
+    // Trim leading space
+    while(isspace(*str)) str++;
+    
+    if(*str == 0)  // All spaces?
+        return str;
+    
+    // Trim trailing space
+    end = str + strlen(str) - 1;
+    while(end > str && isspace(*end)) end--;
+    
+    // Write new null terminator
+    *(end+1) = 0;
+    
+    return str;
+}
+void sig_handler(int signo)
+{
+    //printf("%d\n",signo);
+    if (signo == SIGINT){
+        printf("Do you want to exit? (yes/no):");
+        char s[256];
+        scanf("%s",s);
+        int cmp = strcmp(s, "yes");
+        int cmp2 = strcmp(s, "no");
+        if( cmp ==0){
+            printf("type yes\n");
+            exit(1);
+        }else if(cmp2 == 0){
+            printf("type no\n");
+        }
+    }
+    else if (signo == SIGHUP)
+        printf("received HUP\n");
+}
+
