@@ -13,48 +13,27 @@
 #include <signal.h>
 #include <unistd.h>
 
-char *trimwhitespace(char *str);
+char* trimwhitespace(char *str);
 void sig_handler(int signo);
+void print_help();
+void sample_data(struct Spreadsheet* sheet);
 
 int main(int argc, const char * argv[]) {
       if (signal(SIGINT, sig_handler) == SIG_ERR)
           printf("\ncan't catch SIGINT\n");
       if (signal(SIGHUP, sig_handler) == SIG_ERR)
           printf("\ncan't catch SIGHUP\n");
-//    if (signal(SIGSTOP, sig_handler) == SIG_ERR)
-//        printf("\ncan't catch SIGSTOP\n");
-    // insert code here...
     
     struct Spreadsheet* sheet = spreadsheet_init("Test", 1, 1);
-    add_node(sheet->tree, "20", NULL, "A", "1");
-    add_node(sheet->tree, "30", NULL, "A", "2");
-    add_node(sheet->tree, "50", NULL, "A", "3");
-    add_node(sheet->tree, "2", NULL, "B", "2");
-    DEBUG_PRINT("Add formula\n");
-    add_node(sheet->tree, "", "A1+A2", "C", "1");
-    DEBUG_PRINT("Add formula\n");
-    add_node(sheet->tree, "", "A2/B2", "C", "2");
-    DEBUG_PRINT("Add formula\n");
-    add_node(sheet->tree, "", "B2*A3", "C", "3");
-    DEBUG_PRINT("Edit cell\n");
-    add_node(sheet->tree, "25", NULL, "A", "3");
-    char* res = sum(sheet, "A", "1", "A", "3");
-    DEBUG_PRINT("%s",res);
-    DEBUG_PRINT("FINISH INIT\n");
-    print_tree(sheet->tree);
+    sample_data(sheet);
     
-    printf("**********C Spreadsheet***********\n");
-    printf("Start Interface -> cell format XY\n");
-    printf("1 : set <cell> <value>, set <cell> =<formula>\n");
-    printf("2 : get <cell>\n");
-    printf("3 : recalc\n");
-    printf("4 : sum <cell1> <cell2>\n");
-    printf("**********************************\n");
+    print_help();
     
     while(1){
         printf("$sheet-cmd: ");
-        char cmd[50];
+        char* cmd = (char*) malloc(sizeof(char)*50);
         fgets(cmd,50,stdin);
+        trimwhitespace(cmd);
         char* token = strtok(cmd, " ");
 
         char* attr[3];
@@ -65,13 +44,15 @@ int main(int argc, const char * argv[]) {
             i++;
             token = strtok(NULL, " ");
         }
-        DEBUG_PRINT("%s %s %s",attr[0],attr[1],attr[2]);
+        DEBUG_PRINT("%s %s %s\n",attr[0],attr[1],attr[2]);
         int c = -1;
         if(strcmp(attr[0],"set") == 0) c = 0;
         else if (strcmp(attr[0],"get") == 0) c = 1;
         else if (strcmp(attr[0],"recalc") == 0) c = 2;
         else if (strcmp(attr[0],"sum") == 0) c = 3;
         else if (attr[0][0]==24) c = 4;
+        else if (strcmp(attr[0],"list") == 0) c = 5;
+                 
         char* pos[2] ;
         char* pos2[2] ;
         struct Node* node;
@@ -98,15 +79,15 @@ int main(int argc, const char * argv[]) {
                     for(c = 1 ; c < strlen(attr[2]) ; c++){
                         formula[c-1] = attr[2][c] ;
                     }
-                    DEBUG_PRINT("New Formula");
+                    DEBUG_PRINT("New Formula\n");
                     node->formula = formula;
                 }else{
                     // Add value cell
-                    DEBUG_PRINT("New Val");
+                    DEBUG_PRINT("New Val\n");
                     node->val = attr[2];
                 }
-                printf("CELL %s%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
                 update_formula_node(sheet->tree,sheet->tree->root);
+                printf("CELL %s%s Val=%s Formula=%s\n", pos[0], pos[1], node->val, node->formula);
                 break;
             case 1:
                 //GET A2
@@ -120,7 +101,7 @@ int main(int argc, const char * argv[]) {
                 break;
             case 2:
                 //RECALCULATE
-                printf("Update spreadsheet");
+                printf("Update spreadsheet\n");
                 update_formula_node(sheet->tree,sheet->tree->root);
                 break;
             case 3:
@@ -135,8 +116,13 @@ int main(int argc, const char * argv[]) {
                 printf("Exit Program...");
                 exit(1);
                 break;
+            case 5:
+                //LIST
+                print_sheet(sheet);
+                break;
             default:
                 printf("Wrong command!\n");
+                print_help();
                 break;
         }
         
@@ -184,4 +170,32 @@ void sig_handler(int signo)
     else if (signo == SIGHUP)
         printf("received HUP\n");
 }
+void print_help(){
+    printf("**********C Spreadsheet***********\n");
+    printf("CLI -> cell format XY\n");
+    printf("1 : set <cell> <value>, set <cell> =<formula>\n");
+    printf("2 : get <cell>\n");
+    printf("3 : recalc\n");
+    printf("4 : sum <cell1> <cell2>\n");
+    printf("5 : list\n");
+    printf("**********************************\n");
+}
+void sample_data(struct Spreadsheet *sheet){
+    add_node(sheet->tree, "20", NULL, "A", "1");
+    add_node(sheet->tree, "30", NULL, "A", "2");
+    add_node(sheet->tree, "50", NULL, "A", "3");
+    add_node(sheet->tree, "2", NULL, "B", "2");
+    DEBUG_PRINT("Add formula\n");
+    add_node(sheet->tree, "", "A1+A2", "C", "1");
+    DEBUG_PRINT("Add formula\n");
+    add_node(sheet->tree, "", "A2/B2", "C", "2");
+    DEBUG_PRINT("Add formula\n");
+    add_node(sheet->tree, "", "A1+A2", "B", "1");
+    DEBUG_PRINT("Add formula\n");
+    add_node(sheet->tree, "", "B2*A3", "C", "3");
+    DEBUG_PRINT("Edit cell\n");
+    add_node(sheet->tree, "25", NULL, "A", "3");
+    DEBUG_PRINT("FINISH INIT\n");
+    // print_sheet(sheet);
 
+}

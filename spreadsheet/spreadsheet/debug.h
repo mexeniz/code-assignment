@@ -9,7 +9,7 @@
 #ifndef debug_h
 #define debug_h
 
-#define MYDEBUG 0
+// #define MYDEBUG 0
 
 #ifdef MYDEBUG
     #define DEBUG_PRINT printf
